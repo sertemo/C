@@ -1,0 +1,3 @@
+Esto es un archivo para practicar
+el lenguaje C. tutoriales sacados
+de Charles Severance
