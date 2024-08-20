@@ -28,9 +28,17 @@ void V(CSEM *sem) {  // Hace una UP operation quitando de la cola si value es po
 // Binary Semaphore
 // Los valores de un Binary Semaphore pueden ser 0 o 1. no hay valores negativos de value
 
+// Definición de QueueType y funciones asociadas (esto es solo un ejemplo)
+typedef struct {
+    // Suponiendo que la cola tenga un tamaño fijo
+    int items[10];
+    int front, rear;
+} QueueType;
+
+
 typedef struct {
     int value;  // Solo puede ser 0 o 1. 0 = bloqueado, 1 = libre
-    Queuetype L;
+    QueueType L;
 } BSEM;
 
 // User Mode -> inicializamos el Binary Semaphore
@@ -56,8 +64,10 @@ void V(BSEM *sem) {  // UP operation
 }
 
 int main() {
-    BSEM sem;
-    sem.value = 1;  // Inicializar el semáforo a 1 (recurso disponible)
+    // Inicialización del semáforo binario
+    BSEM S = {.value = 1, .L = {{0}, 0, 0}};
+
+    // Ahora S.value es 1 y S.L es una cola vacía
     // Resto del código...
     return 0;
 }
