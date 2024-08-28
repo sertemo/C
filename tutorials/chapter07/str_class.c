@@ -6,30 +6,29 @@
 
 // Vamos a construir un objeto tipo String en C, simulando Python
 
-struct pystr {  // Los atributos serán "privados"
+typedef struct pystr {  // Los atributos serán "privados", no accesibles por el usuario
     int length;
     int alloc; /* the length of data*/
     char *data;
-};
+} str;  // alias str como en Python
 
-// El constructor
-struct pystr *pystr_new(void) {
-    struct pystr* p = malloc(sizeof(struct pystr));
-    p->length = 0;
+// El constructor. Devuelve un puntero de tipo struct str
+str* pystr_new(void) {
+    str* p = malloc(sizeof(str));  // alocamos espacio en memoria para la struct str
+    p->length = 0;  // instanciamos los valores en memoria
     p->alloc = DEFAULT_SIZE;  // por ejemplo 10
-    p->data = malloc(DEFAULT_SIZE);
-    p->data[0] = '\0';  // Ponemos el 0 al principio
+    p->data = malloc(DEFAULT_SIZE);  // alocamos memoria para el string
     return p;
 }
 
 // El destructor
-void pystr_del(const struct pystr *self) {
+void pystr_del(str *self) {  // acepta como parámetro un puntero a un objeto struct str
     free((void*) self->data);  // primero el string
     free((void*) self);  // luego el objeto completo
 }
 
 // Método para printear
-void pystr_dump(const struct pystr *self) {
+void pystr_dump(str *self) {
     printf("String = %s\n", self->data);
     printf("Length = %d\n", self->length);
     printf("Alloc = %d\n", self->alloc);
@@ -37,18 +36,18 @@ void pystr_dump(const struct pystr *self) {
 }
 
 // Método para devolver la longitud de la cadena
-int pystr_len(const struct pystr *self) {
+int pystr_len(str *self) {
     return self->length;
 }
 
-char *pystr_str(const struct pystr *self) {
+char* pystr_str(str *self) {  // Devuelve un puntero al string
     return self->data;
 }
 
 // Método para concatenar un caracter: x = x + 'h'
-void pystr_append(struct pystr *self, char c) {
-    if (self->length >= self->alloc) {
-        self->alloc += 10;
+void pystr_append(str *self, char c) {
+    if (self->length + 1 >= self->alloc) {
+        self->alloc = self->length + 2;  // Pedimos mas espacio de memoria
         self->data = realloc(self->data, self->alloc);
     }
     self->data[self->length] = c;
@@ -57,7 +56,7 @@ void pystr_append(struct pystr *self, char c) {
 }
 
 // Método para concatenar un string: x = x + "hello world"
-void pystr_appends(struct pystr *self, const char *s) {
+void pystr_appends(str *self, const char *s) {
     int len = strlen(s);
     
     // Redimensionar si es necesario
@@ -82,7 +81,7 @@ void pystr_appends(struct pystr *self, const char *s) {
 }
 
 // Método para asignar un string: x = "hello world"
-void pystr_assign(struct pystr *self, const char *s) {
+void pystr_assign(str *self, const char *s) {
     int len = strlen(s);
     if (self->length < len) {
         self->alloc = len;
@@ -95,21 +94,27 @@ void pystr_assign(struct pystr *self, const char *s) {
 
 int main(void) {
     printf("Testing pystr class\n");
-    struct pystr *x = pystr_new();  // llamamos al constructor
+    str *x = pystr_new();  // llamamos al constructor
 
     pystr_dump(x);  // printeamos el contenido del string
 
     pystr_append(x, 'H');
     pystr_dump(x);
 
-    pystr_appends(x, "ello world");
+    pystr_append(x, 'e');
+    pystr_dump(x);
+
+    pystr_append(x, 'l');
+    pystr_dump(x);
+
+    pystr_appends(x, "lo world");
     pystr_dump(x);
 
     pystr_assign(x, "A completely new string");
     printf("String = %s\n", pystr_str(x));
     printf("Length = %d\n", pystr_len(x));
     pystr_dump(x);
-    printf("Tamaño del objeto str: %d bytes\n", sizeof(*x));
+    printf("Tamaño del objeto str: %li bytes\n", sizeof(*x));
     pystr_del(x);
     return 0;
 }
