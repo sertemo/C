@@ -42,7 +42,7 @@ void del(dict *self) {
 // Método para insertar un par clave valor al diccionario
 void insert(dict *self, char *k, char *v) {
     // verificamos si la clave ya existe
-    node* __find(dict *self, char *k);
+    node* __find(dict *self, char *k);  // Declaramos la función porque está definada mas abajo
     node *cur = __find(self, k);
     if (cur) {
         free(cur->value);
