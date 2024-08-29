@@ -1,6 +1,6 @@
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // En este script vamos a refactorizar la implementación de un diccionario usando variables privadas y métodos internos de la estructura
 
