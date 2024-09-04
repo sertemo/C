@@ -1,6 +1,7 @@
 /*
 Versión de cómo Guido Van Rossum
-implementó en su día una lista en Python*/
+implementó en su día una lista en Python
+En esta versión solo se aceptan caracteres*/
 
 #include <stdio.h>
 #include <stdlib.h>
